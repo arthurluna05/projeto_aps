@@ -37,7 +37,7 @@ function handleError(res: express.Response, error: unknown) {
   }
 }
 
-// ROTAS
+// ROTAS 
 app.get('/clientes', async (req, res) => {
   try {
     const clientes = await prisma.cliente.findMany();
