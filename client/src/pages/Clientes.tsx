@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { cnpj as cnpjValidator } from 'cpf-cnpj-validator';
 import axios from 'axios';
 
-// Esquema de validação com Zod
+
 const clienteSchema = z.object({
   cnpj: z.string().length(14, 'CNPJ deve ter 14 dígitos'),
   nome: z.string().min(3).max(100),
