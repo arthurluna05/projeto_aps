@@ -7,6 +7,7 @@ import axios from 'axios';
 const app = express();
 const prisma = new PrismaClient();
 
+// PERMITIR REQUISIÇÕES DE DIFERENTES ORIGENS
 app.use(cors());
 app.use(express.json());
 
