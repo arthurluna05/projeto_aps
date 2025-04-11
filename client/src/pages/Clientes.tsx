@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { cnpj as cnpjValidator } from 'cpf-cnpj-validator';
 import axios from 'axios';
 
-
+// ESQUEMA DE VALIDAÇÃO COM ZOD
 const clienteSchema = z.object({
   cnpj: z.string().length(14, 'CNPJ deve ter 14 dígitos'),
   nome: z.string().min(3).max(100),
@@ -25,17 +25,21 @@ const clienteSchema = z.object({
 
 type Cliente = z.infer<typeof clienteSchema>;
 
+// COMPONENTE PRINCIPAL
 const Clientes: React.FC = () => {
+// ESTADOS DO COMPONENTE
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [clienteAtual, setClienteAtual] = useState<Partial<Cliente>>({});
   const [erros, setErros] = useState<Record<string, string>>({});
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [modoEdicao, setModoEdicao] = useState(false);
 
+// CARREGAMENTO INICIAL DOS CLIENTES
   useEffect(() => {
     carregarClientes();
   }, []);
 
+// FUNÇÃO PARA CARREGAR CLIENTES DA API
   const carregarClientes = async () => {
     try {
       const res = await axios.get('http://localhost:3001/clientes');
@@ -45,11 +49,14 @@ const Clientes: React.FC = () => {
     }
   };
 
+// MANIPULAÇÃO DE MUDANÇAS NOS CAMPOS DO FORMULÁRIO
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setClienteAtual(prev => ({ ...prev, [name]: value }));
   };
 
+// VALIDAÇÃO DO CLIENTE ANTES DE ENVIAR
   const validarCliente = () => {
     if (!clienteAtual.cnpj || !cnpjValidator.isValid(clienteAtual.cnpj)) {
       setErros(prev => ({ ...prev, cnpj: 'CNPJ inválido (dígito verificador)' }));
@@ -73,6 +80,7 @@ const Clientes: React.FC = () => {
     }
   };
 
+// ENVIO DO FORMULÁRIO
   const handleSubmit = async () => {
     if (!validarCliente()) return;
 
@@ -91,6 +99,7 @@ const Clientes: React.FC = () => {
     }
   };
 
+// EXCLUSÃO DE UM CLIENTE
   const handleDelete = async (cnpj: string) => {
     if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
       try {
@@ -102,6 +111,7 @@ const Clientes: React.FC = () => {
     }
   };
 
+// CONSULTA EXTERNA CNPJ
   const handleConsultaCNPJ = async () => {
     if (!clienteAtual.cnpj) return;
 
@@ -127,6 +137,7 @@ const Clientes: React.FC = () => {
     }
   };
 
+// CONSULTA EXTERNA CEP
   const handleConsultaCEP = async () => {
     if (!clienteAtual.cep) return;
 
@@ -147,6 +158,7 @@ const Clientes: React.FC = () => {
     }
   };
 
+// ABERTURA PARA NOVO CLIENTE
   const abrirModalNovo = () => {
     setClienteAtual({});
     setModoEdicao(false);
@@ -154,6 +166,7 @@ const Clientes: React.FC = () => {
     onOpen();
   };
 
+// ABERTURA PARA EDIÇÃO DE CLIENTE
   const abrirModalEdicao = (cliente: Cliente) => {
     setClienteAtual(cliente);
     setModoEdicao(true);
@@ -161,6 +174,7 @@ const Clientes: React.FC = () => {
     onOpen();
   };
 
+// RENDERIZAÇÃO
   return (
     <Box p={4}>
       <Button colorScheme="blue" mb={4} onClick={abrirModalNovo}>
